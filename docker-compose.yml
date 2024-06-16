@@ -2,7 +2,7 @@ version: '3'
 services:
   
   web:
-    image: 'priyanshu1979/jenkins-webapp:${env.BUILD_NUMBER}'
+    image: 'priyanshu1979/jenkins-webapp:latest'
     ports:
       - "8501:8501"
     
