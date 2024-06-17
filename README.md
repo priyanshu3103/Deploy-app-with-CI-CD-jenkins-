@@ -1,4 +1,5 @@
 # Jenkins Setup
+<img src = "jenkins-viwe.png">
 ## Prerequisites:
 Minimum hardware requirements:
 
