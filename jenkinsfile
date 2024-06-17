@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+    
+    stages{
+        stage('clean docker'){
+            steps{
+                echo "Cleaning docker system....."
+                sh "docker system prune -a -f || true"
+                sh "docker volume prune -f || true"
+            }
+        }
+        stage('clone repo') {
+            steps{
+                echo "Clonning repository......"
+                git url:'https://github.com/priyanshu3103/Deploy-app-with-CI-CD-jenkins-.git', branch:'main'
+            }
+            
+        }
+        stage('Build image') {
+            steps{
+                echo "Building docker image......."
+                sh "docker build -t jenkins-webapp ."
+            }
+            
+        }
+        stage('Push image on DockerHub') {
+            steps{
+                echo "Pushing image on dockerHub......."
+                withCredentials([usernamePassword(credentialsId: "dockerHub", passwordVariable: "dockerHubPass", usernameVariable: "dockerHubUser")]){
+                    sh "docker tag jenkins-webapp  ${dockerHubUser}/jenkins-webapp:latest"
+                    sh "docker login -u ${dockerHubUser} -p ${dockerHubPass}"
+                    sh "docker push ${dockerHubUser}/jenkins-webapp:latest"
+                }
+                
+            }
+            
+        }
+        stage('Run conrainer') {
+            steps{
+                echo "Running container......"
+                sh "docker-compose down && docker-compose up"
+            }
+            
+        }
+    }
+    post {
+        success {
+            echo "Deployment succeeded!"
+        }
+        failure {
+            echo "Deployment failed!"
+        }
+    }
+}
+
