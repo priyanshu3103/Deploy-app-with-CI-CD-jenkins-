@@ -1,5 +1,3 @@
-# jenkins
-
 # Jenkins Setup
 ## Prerequisites:
 Minimum hardware requirements:
